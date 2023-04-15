@@ -1,0 +1,111 @@
+def calcDeckVal(deck):
+  valDeck = []
+  sum = 0
+  strCard = ""
+  for x in deck:
+    strCard = x[:-1]
+    if strCard in ['K','Q','J']:
+      valDeck.append('10')
+    else:
+      valDeck.append(strCard)
+  valDeck.sort()
+  for x in valDeck:
+    if sum > 10 and x == 'A':
+      sum += 1
+    elif sum <= 10 and x == 'A':
+      sum += 11
+    else:
+      sum += int(x)
+  return sum
+    
+def shuffle(deck):
+  cardNum = 0
+  shuffledDeck = []
+  while len(deck) > 0:
+  #do something
+    cardNum = random.randint(0,len(deck)-1)
+    shuffledDeck.append(deck.pop(cardNum))
+  return shuffledDeck
+
+
+#importing stuff
+import random
+from colorama import Fore, Back, Style
+
+#This is the main method:
+#Declaring variables:
+myDeck = []
+cpDeck = []
+shuffleddeck = []
+myScore = 0
+cpScore = 0
+playerName = ""
+decision = "hit"
+#Defining the deck:
+deck = [
+  "2♥", "3♥", "4♥", "5♥", "6♥", "7♥", "8♥", "9♥", "10♥", "J♥", "Q♥", "K♥",
+  "A♥", "2♦", "3♦", "4♦", "5♦", "6♦", "7♦", "8♦", "9♦", "10♦", "J♦", "Q♦",
+  "K♦", "A♦", "2♣", "3♣", "4♣", "5♣", "6♣", "7♣", "8♣", "9♣", "10♣", "J♣",
+  "Q♣", "K♣", "A♣", "2♠", "3♠", "4♠", "5♠", "6♠", "7♠", "8♠", "9♠", "10♠",
+  "J♠", "Q♠", "K♠", "A♠"
+]
+numberOfCard = 0
+
+#Don't use this line of code!
+#random.shuffle(deck)
+
+shuffleddeck = shuffle(deck)
+
+playerName = input('What is your name? ')
+
+print("\n")
+
+print("===============================================================")
+print('This is how the game works: The objective of the game is simple. You bet some legos, and in order to win you need to be the closest to 21 in order to win. If the dealer wins then you use your legos. When it is your turn you can either hit or stay. If you hit then you draw a card, but if you stay then your turn is over. But be careful! You dont want to loose all of your legos!')
+print("===============================================================")
+
+print("\n")
+
+while numberOfCard < 2:
+  #This takes the top card out of base deck and puts it in your deck:
+  myDeck.append(shuffleddeck.pop())
+  cpDeck.append(shuffleddeck.pop())
+  numberOfCard += 1
+print(playerName + ' , this is your deck')
+#You are not aloud to see the dealers deck, that's why it is not shown here
+
+print("\n")
+
+print(Fore.BLUE + str(myDeck))
+print(Style.RESET_ALL)
+print("\n")
+
+while myScore < 21 and cpScore < 21 and decision == 'hit':
+  decision = input('would you like to hit or stay? ')
+
+  print("\n")
+  
+  if decision == 'hit':
+    myDeck.append(shuffleddeck.pop())
+    cpDeck.append(shuffleddeck.pop())
+    print("===============================================================")
+    print(playerName + ' This is your deck now ' + Fore.BLUE + str(myDeck))
+    print(Style.RESET_ALL)
+
+  print("\n")
+  
+  myScore = calcDeckVal(myDeck)
+  cpScore = calcDeckVal(cpDeck)
+
+print (playerName + ' You have ' + Fore.BLUE + str(myScore) + Fore.WHITE + ' and the dealer has ' + Fore.RED + str(cpScore))
+print(Style.RESET_ALL)
+print("===============================================================")
+
+print("\n")
+
+if (myScore > cpScore and myScore <= 21) or cpScore > 21:
+  print('Congratulations ' + playerName + ', you won!')
+elif cpDeck > 21 and myDeck > 21:
+  print(playerName + 'This game was a tie')
+else:
+  print('Too bad ' + playerName + ', now all your legos are gone')
